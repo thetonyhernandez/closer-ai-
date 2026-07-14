@@ -16,350 +16,363 @@
     --accent-dim: rgba(212,69,12,0.15);
     --green: #22c55e;
     --green-dim: rgba(34,197,94,0.12);
-    --blue: #3b82f6;
-    --blue-dim: rgba(59,130,246,0.12);
     --gold: #f59e0b;
     --gold-dim: rgba(245,158,11,0.12);
     --text: #f0ede8;
     --muted: #6b6966;
     --muted2: #9a9794;
-    --card-shadow: 0 2px 16px rgba(0,0,0,0.4);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; line-height: 1.6; min-height: 100vh; overflow: hidden; }
 
-  /* ── SETUP SCREEN ── */
-  #setupScreen {
-    position: fixed; inset: 0; background: var(--bg);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 999; flex-direction: column; gap: 0; padding: 20px;
-  }
-  .setup-card {
+  /* ── SCREENS ── */
+  .screen { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 900; background: var(--bg); }
+  .screen.hidden { display: none; }
+
+  .card {
     background: var(--surface); border: 1px solid var(--border2);
-    border-radius: 16px; padding: 40px; max-width: 460px; width: 100%;
+    border-radius: 16px; padding: 36px; max-width: 480px; width: 100%;
     box-shadow: 0 8px 40px rgba(0,0,0,0.6);
   }
-  .setup-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 4px; }
-  .setup-logo span { color: var(--text); }
-  .setup-tagline { font-size: 12px; color: var(--muted); margin-bottom: 28px; }
-  .setup-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-  .setup-desc { font-size: 12.5px; color: var(--muted2); margin-bottom: 20px; line-height: 1.65; }
-  .setup-desc a { color: var(--accent); text-decoration: none; }
-  .setup-desc a:hover { text-decoration: underline; }
-  .setup-input-row { display: flex; gap: 8px; margin-bottom: 12px; }
-  #apiKeyInput {
-    flex: 1; background: var(--surface2); border: 1px solid var(--border2);
-    border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--text);
-    font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s;
-    letter-spacing: 0.04em;
-  }
-  #apiKeyInput:focus { border-color: var(--accent); }
-  #apiKeyInput::placeholder { color: var(--muted); letter-spacing: 0; }
-  .setup-btn {
-    padding: 10px 22px; background: var(--accent); border: none; border-radius: 8px;
-    color: #fff; font-size: 13px; font-weight: 500; cursor: pointer;
-    font-family: 'DM Sans', sans-serif; white-space: nowrap; transition: opacity 0.2s;
-  }
-  .setup-btn:hover { opacity: 0.85; }
-  .setup-note { font-size: 11px; color: var(--muted); line-height: 1.6; }
-  .setup-note a { color: var(--muted2); }
-  .setup-error { font-size: 12px; color: #f87171; margin-top: 8px; display: none; }
-  .setup-divider { height: 1px; background: var(--border); margin: 20px 0; }
-  .step-row { display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-start; }
-  .step-num { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+  .card-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 3px; }
+  .card-logo span { color: var(--text); }
+  .card-sub { font-size: 11.5px; color: var(--muted); margin-bottom: 24px; }
+  .card-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; margin-top: 18px; }
+  .card-label:first-of-type { margin-top: 0; }
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+  .step-row { display: flex; gap: 10px; margin-bottom: 10px; }
+  .step-num { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; color: var(--accent); flex-shrink: 0; }
   .step-text { font-size: 12px; color: var(--muted2); line-height: 1.6; }
   .step-text a { color: var(--accent); text-decoration: none; }
 
+  .inp {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: 8px; padding: 10px 13px; font-size: 13px; color: var(--text);
+    font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s;
+    margin-bottom: 4px;
+  }
+  .inp:focus { border-color: var(--accent); }
+  .inp::placeholder { color: var(--muted); }
+  textarea.inp { resize: vertical; min-height: 70px; }
+
+  .inp-row { display: flex; gap: 8px; }
+  .inp-row .inp { margin-bottom: 0; }
+
+  .btn {
+    padding: 11px 24px; background: var(--accent); border: none; border-radius: 8px;
+    color: #fff; font-size: 13px; font-weight: 500; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; transition: opacity 0.2s; width: 100%; margin-top: 16px;
+  }
+  .btn:hover { opacity: 0.85; }
+  .btn-ghost {
+    padding: 8px 16px; background: transparent; border: 1px solid var(--border2);
+    border-radius: 8px; color: var(--muted2); font-size: 12px; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; transition: all 0.15s; margin-top: 10px; width: 100%; text-align: center;
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  .err { font-size: 11.5px; color: #f87171; margin-top: 6px; display: none; }
+  .note { font-size: 11px; color: var(--muted); line-height: 1.6; margin-top: 8px; }
+
+  /* progress dots */
+  .progress-dots { display: flex; gap: 6px; margin-bottom: 20px; }
+  .pdot { width: 6px; height: 6px; border-radius: 50%; background: var(--border2); transition: background 0.2s; }
+  .pdot.active { background: var(--accent); }
+
   /* ── TOP BAR ── */
   .topbar {
-    display: flex; align-items: center; gap: 14px; padding: 12px 20px;
+    display: flex; align-items: center; gap: 12px; padding: 10px 18px;
     background: var(--surface); border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 100; height: 52px;
+    height: 50px; flex-shrink: 0;
   }
-  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.08em; color: var(--accent); }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.25rem; letter-spacing: 0.08em; color: var(--accent); }
   .logo span { color: var(--text); }
-  .topbar-divider { width: 1px; height: 22px; background: var(--border2); }
-  .call-status { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--muted2); }
-  .call-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); transition: background 0.3s; }
+  .tb-divider { width: 1px; height: 20px; background: var(--border2); }
+  .call-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted2); }
+  .call-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); transition: all 0.3s; }
   .call-dot.active { background: var(--green); box-shadow: 0 0 0 3px var(--green-dim); }
-  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-  .timer { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.1em; color: var(--muted2); min-width: 50px; transition: color 0.3s; }
+  .tb-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .timer { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; letter-spacing: 0.1em; color: var(--muted2); min-width: 46px; }
   .timer.active { color: var(--green); }
+
   .mic-btn {
-    display: flex; align-items: center; gap: 7px; padding: 7px 15px;
+    display: flex; align-items: center; gap: 6px; padding: 6px 14px;
     border-radius: 999px; border: 1.5px solid var(--border2); background: transparent;
     color: var(--muted2); font-family: 'DM Sans', sans-serif; font-size: 12px;
     font-weight: 500; cursor: pointer; transition: all 0.2s;
   }
   .mic-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .mic-btn.listening { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); animation: pulse-border 1.8s infinite; }
-  @keyframes pulse-border { 0%,100%{box-shadow:0 0 0 0 rgba(212,69,12,0.3)} 50%{box-shadow:0 0 0 5px rgba(212,69,12,0)} }
-  .key-btn {
-    display: flex; align-items: center; gap: 6px; padding: 6px 12px;
-    border-radius: 999px; border: 1px solid var(--border2); background: transparent;
-    color: var(--muted); font-size: 11px; cursor: pointer; transition: all 0.15s;
-    font-family: 'DM Sans', sans-serif;
+  .mic-btn.listening { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); animation: pulse 1.8s infinite; }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(212,69,12,0.3)} 50%{box-shadow:0 0 0 5px rgba(212,69,12,0)} }
+
+  .icon-btn {
+    padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border2);
+    background: transparent; color: var(--muted); font-size: 11px; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; transition: all 0.15s;
   }
-  .key-btn:hover { border-color: var(--border2); color: var(--muted2); }
+  .icon-btn:hover { color: var(--muted2); border-color: var(--border2); }
 
   /* ── LAYOUT ── */
-  .layout { display: grid; grid-template-columns: 300px 1fr; height: calc(100vh - 52px); }
+  #appShell { display: none; flex-direction: column; height: 100vh; }
+  #appShell.visible { display: flex; }
+  .layout { display: grid; grid-template-columns: 290px 1fr; flex: 1; overflow: hidden; }
 
-  /* ── LEFT PANEL ── */
+  /* ── LEFT ── */
   .left-panel { border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
-  .panel-header {
-    padding: 12px 14px 10px; border-bottom: 1px solid var(--border);
-    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  .panel-hdr {
+    padding: 10px 13px 8px; border-bottom: 1px solid var(--border);
+    font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
     color: var(--muted); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
   }
-  .transcript-feed { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 5px; }
-  .transcript-line {
-    padding: 7px 10px; border-radius: 6px; font-size: 12px; line-height: 1.5;
+  .transcript-feed { flex: 1; overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 4px; }
+  .tline {
+    padding: 6px 9px; border-radius: 5px; font-size: 12px; line-height: 1.5;
     border: 1px solid transparent; transition: all 0.15s; position: relative;
   }
-  .transcript-line.them { background: var(--surface); border-color: var(--border); color: var(--text); cursor: pointer; }
-  .transcript-line.them:hover { border-color: var(--accent); }
-  .transcript-line.me { background: transparent; color: var(--muted); padding-left: 16px; font-size: 11px; }
-  .transcript-line.me::before { content:''; position:absolute; left:7px; top:50%; transform:translateY(-50%); width:3px; height:3px; border-radius:50%; background:var(--muted); }
-  .transcript-line .spk { font-size: 9px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2px; color: var(--accent); }
-  .transcript-line.flagged { border-color: var(--gold) !important; background: var(--gold-dim) !important; }
+  .tline.them { background: var(--surface); border-color: var(--border); color: var(--text); cursor: pointer; }
+  .tline.them:hover { border-color: var(--accent); }
+  .tline.me { color: var(--muted); font-size: 11px; padding-left: 14px; }
+  .tline.me::before { content:''; position:absolute; left:6px; top:50%; transform:translateY(-50%); width:3px; height:3px; border-radius:50%; background:var(--muted); }
+  .tline .spk { font-size: 9px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 1px; }
+  .tline.flagged { border-color: var(--gold) !important; background: var(--gold-dim) !important; }
+
   .live-bar {
-    display: none; align-items: center; gap: 7px; padding: 5px 10px;
+    display: none; align-items: center; gap: 6px; padding: 4px 9px;
     background: var(--accent-dim); border: 1px solid rgba(212,69,12,0.2);
-    border-radius: 5px; margin: 3px 10px; font-size: 11px; color: var(--accent); flex-shrink: 0;
+    border-radius: 5px; margin: 3px 8px; font-size: 11px; color: var(--accent); flex-shrink: 0;
   }
-  .live-bar.visible { display: flex; }
-  .live-preview { flex: 1; color: var(--muted2); font-size: 11px; font-style: italic; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .live-bar.on { display: flex; }
+  .live-prev { flex: 1; color: var(--muted2); font-size: 10.5px; font-style: italic; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
   /* QUICK FIRE */
-  .quick-section { padding: 8px 10px; border-top: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
-  .quick-label { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
-  .quick-list { display: flex; flex-wrap: wrap; gap: 4px; }
-  .qb {
-    padding: 3px 9px; border-radius: 999px; font-size: 11px; border: 1px solid var(--border2);
+  .qsection { padding: 7px 9px; border-top: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
+  .qlabel { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+  .qlist { display: flex; flex-wrap: wrap; gap: 4px; }
+  .qbtn {
+    padding: 3px 8px; border-radius: 999px; font-size: 10.5px; border: 1px solid var(--border2);
     background: transparent; color: var(--muted2); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s;
   }
-  .qb:hover { border-color: var(--gold); color: var(--gold); }
+  .qbtn:hover { border-color: var(--gold); color: var(--gold); }
 
-  /* MANUAL INPUT */
-  .manual-area { padding: 8px 10px; border-top: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
-  .manual-label { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
-  .manual-row { display: flex; gap: 6px; }
+  /* MANUAL */
+  .manual-area { padding: 7px 9px; border-top: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
+  .mlabel { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+  .mrow { display: flex; gap: 5px; }
   #manualInput {
     flex: 1; background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px;
-    padding: 7px 10px; font-size: 12px; color: var(--text); font-family: 'DM Sans', sans-serif;
-    outline: none; transition: border-color 0.2s;
+    padding: 6px 9px; font-size: 12px; color: var(--text); font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s;
   }
   #manualInput:focus { border-color: var(--accent); }
   #manualInput::placeholder { color: var(--muted); }
-  .send-btn {
-    padding: 7px 13px; background: var(--accent); border: none; border-radius: 6px;
-    color: #fff; font-size: 12px; font-weight: 500; cursor: pointer; transition: opacity 0.2s;
-    font-family: 'DM Sans', sans-serif; white-space: nowrap;
+  .sbtn {
+    padding: 6px 12px; background: var(--accent); border: none; border-radius: 6px;
+    color: #fff; font-size: 12px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap;
   }
-  .send-btn:hover { opacity: 0.85; }
+  .sbtn:hover { opacity: 0.85; }
 
-  /* ── RIGHT PANEL ── */
+  /* ── RIGHT ── */
   .right-panel { display: flex; flex-direction: column; overflow: hidden; background: var(--bg); }
-  .right-header {
-    padding: 12px 16px 10px; border-bottom: 1px solid var(--border);
-    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  .right-hdr {
+    padding: 10px 15px 8px; border-bottom: 1px solid var(--border);
+    font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
     color: var(--muted); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
   }
-  .fw-badges { display: flex; gap: 5px; }
-  .fw-badge { font-size: 10px; padding: 2px 7px; border-radius: 4px; font-weight: 500; letter-spacing: 0.04em; }
-  .fw-miner { background: rgba(167,139,250,0.15); color: #c4b5fd; border: 1px solid rgba(167,139,250,0.2); }
-  .fw-belfort { background: rgba(59,130,246,0.12); color: #93c5fd; border: 1px solid rgba(59,130,246,0.2); }
-  .fw-hormozi { background: rgba(34,197,94,0.1); color: #86efac; border: 1px solid rgba(34,197,94,0.2); }
+  .fw-row { display: flex; gap: 4px; flex-wrap: wrap; }
+  .fw { font-size: 9.5px; padding: 2px 7px; border-radius: 4px; font-weight: 500; }
+  .fw-m { background:rgba(167,139,250,0.15);color:#c4b5fd;border:1px solid rgba(167,139,250,0.2); }
+  .fw-b { background:rgba(59,130,246,0.12);color:#93c5fd;border:1px solid rgba(59,130,246,0.2); }
+  .fw-h { background:rgba(34,197,94,0.1);color:#86efac;border:1px solid rgba(34,197,94,0.2); }
+  .fw-c { background:rgba(245,158,11,0.1);color:#fcd34d;border:1px solid rgba(245,158,11,0.2); }
+  .fw-t { background:rgba(244,114,182,0.1);color:#f9a8d4;border:1px solid rgba(244,114,182,0.2); }
 
-  .response-feed { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+  .response-feed { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
 
-  /* WELCOME */
-  .welcome { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; gap: 10px; padding: 40px; }
-  .welcome-icon { font-size: 32px; opacity: 0.12; }
-  .welcome-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.06em; color: var(--muted2); }
-  .welcome-sub { font-size: 12.5px; color: var(--muted); max-width: 300px; line-height: 1.65; }
+  .welcome { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center; gap:8px; padding:40px; }
+  .welcome-icon { font-size:28px; opacity:0.1; }
+  .welcome-title { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:0.06em; color:var(--muted2); }
+  .welcome-sub { font-size:12px; color:var(--muted); max-width:280px; line-height:1.65; }
 
-  /* RESPONSE CARD */
-  .response-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; overflow: hidden; box-shadow: var(--card-shadow); animation: slidein 0.22s ease; }
-  @keyframes slidein { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+  /* RESPONSE CARD — clean, readable mid-call */
+  .rcard { background:var(--surface); border:1px solid var(--border2); border-radius:10px; overflow:hidden; animation:slidein 0.2s ease; }
+  @keyframes slidein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 
-  .card-top { display: flex; align-items: flex-start; gap: 10px; padding: 11px 13px 9px; border-bottom: 1px solid var(--border); }
-  .obj-label { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 3px; font-weight: 500; }
-  .obj-text { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.4; }
-  .obj-tag { margin-left: auto; font-size: 10px; padding: 2px 8px; border-radius: 999px; white-space: nowrap; font-weight: 500; flex-shrink: 0; margin-top: 2px; }
-  .obj-tag.price { background:rgba(245,158,11,0.15);color:var(--gold);border:1px solid rgba(245,158,11,0.25); }
-  .obj-tag.trust { background:var(--blue-dim);color:#93c5fd;border:1px solid rgba(59,130,246,0.25); }
-  .obj-tag.timing { background:var(--green-dim);color:#86efac;border:1px solid rgba(34,197,94,0.25); }
-  .obj-tag.value { background:rgba(167,139,250,0.12);color:#c4b5fd;border:1px solid rgba(167,139,250,0.25); }
-  .obj-tag.competition { background:rgba(244,114,182,0.12);color:#f9a8d4;border:1px solid rgba(244,114,182,0.25); }
-  .obj-tag.stall { background:var(--accent-dim);color:#fca5a5;border:1px solid rgba(212,69,12,0.3); }
+  .rcard-top { padding: 10px 13px 8px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .rcard-obj-lbl { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+  .rcard-obj-text { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.4; }
+  .otag { font-size: 9.5px; padding: 2px 8px; border-radius: 999px; white-space: nowrap; font-weight: 500; flex-shrink: 0; margin-top: 2px; }
+  .otag.price{background:rgba(245,158,11,0.15);color:var(--gold);border:1px solid rgba(245,158,11,0.25);}
+  .otag.trust{background:rgba(59,130,246,0.12);color:#93c5fd;border:1px solid rgba(59,130,246,0.25);}
+  .otag.timing{background:rgba(34,197,94,0.12);color:#86efac;border:1px solid rgba(34,197,94,0.25);}
+  .otag.value{background:rgba(167,139,250,0.12);color:#c4b5fd;border:1px solid rgba(167,139,250,0.25);}
+  .otag.competition{background:rgba(244,114,182,0.12);color:#f9a8d4;border:1px solid rgba(244,114,182,0.25);}
+  .otag.stall{background:var(--accent-dim);color:#fca5a5;border:1px solid rgba(212,69,12,0.3);}
 
-  .card-frameworks { display: flex; gap: 4px; padding: 7px 13px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
-
-  /* BULLETS — first card only */
-  .bullets-section { padding: 10px 13px; border-bottom: 1px solid var(--border); }
-  .bullets-title { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
-  .bullet-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
-  .bullet-list li { display: flex; gap: 7px; font-size: 12.5px; line-height: 1.5; color: var(--text); }
-  .bullet-list li::before { content:'→'; color:var(--accent); flex-shrink:0; font-size:11px; margin-top:2px; }
-
-  /* COACH NOTE */
-  .coach-note { padding: 7px 13px; border-bottom: 1px solid var(--border); font-size: 11.5px; color: var(--muted); }
-  .coach-note strong { color: var(--muted2); font-weight: 500; }
-
-  /* FULL SCRIPT */
-  .script-toggle {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 9px 13px; cursor: pointer; font-size: 10px; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--muted2); transition: color 0.15s; user-select: none;
+  /* THE SCRIPT — this is what they read on the call */
+  .rcard-script { padding: 12px 14px; }
+  .script-block {
+    font-size: 15px; font-weight: 400; color: var(--text); line-height: 1.75;
+    letter-spacing: 0.01em;
   }
-  .script-toggle:hover { color: var(--text); }
-  .chevron { transition: transform 0.2s; font-size: 10px; }
-  .script-toggle.open .chevron { transform: rotate(180deg); }
-  .full-script { display: none; padding: 0 13px 13px; border-top: 1px solid var(--border); }
-  .full-script.open { display: block; }
-  .script-line {
-    padding: 8px 11px; margin-bottom: 7px; border-left: 2px solid var(--border2);
-    font-style: italic; color: var(--text); background: var(--surface2);
-    border-radius: 0 6px 6px 0; font-size: 13px; line-height: 1.65; margin-top: 10px;
+  .script-dir {
+    display: inline-block; font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--accent); background: var(--accent-dim);
+    border-radius: 4px; padding: 1px 6px; margin: 6px 0 4px; font-style: normal;
   }
-  .script-dir { font-size: 11px; color: var(--muted); margin: 6px 0 2px; font-style: normal; font-weight: 500; }
+
+  /* TONE — small, under the script */
+  .rcard-tone {
+    padding: 6px 14px 11px; font-size: 11px; color: var(--muted);
+    border-top: 1px solid var(--border); line-height: 1.5;
+  }
+  .rcard-tone strong { color: var(--muted2); font-weight: 500; }
 
   /* LOADING */
-  .loading-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; padding: 18px; display: flex; align-items: center; gap: 12px; animation: slidein 0.2s ease; }
-  .ldots { display: flex; gap: 4px; }
-  .ldot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: ldot 1.3s infinite ease-in-out; }
+  .loader { background:var(--surface); border:1px solid var(--border2); border-radius:10px; padding:16px; display:flex; align-items:center; gap:10px; animation:slidein 0.2s ease; }
+  .ldots { display:flex; gap:4px; }
+  .ldot { width:6px; height:6px; border-radius:50%; background:var(--accent); animation:ldot 1.3s infinite ease-in-out; }
   .ldot:nth-child(2){animation-delay:0.15s} .ldot:nth-child(3){animation-delay:0.3s}
   @keyframes ldot{0%,60%,100%{transform:scale(0.7);opacity:0.4}30%{transform:scale(1);opacity:1}}
-  .ltext { font-size: 12px; color: var(--muted2); }
+  .ltext { font-size:12px; color:var(--muted2); }
 
-  /* SCROLLBARS */
   ::-webkit-scrollbar{width:3px} ::-webkit-scrollbar-track{background:transparent} ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
 </style>
 </head>
 <body>
 
-<!-- ══ SETUP SCREEN ══ -->
-<div id="setupScreen">
-  <div class="setup-card">
-    <div class="setup-logo">CLOSER<span>AI</span></div>
-    <div class="setup-tagline">Live Sales Call Objection Handler · Powered by Miner · Belfort · Hormozi</div>
+<!-- ══ SCREEN 1: API KEY ══ -->
+<div class="screen" id="s1">
+  <div class="card">
+    <div class="card-logo">CLOSER<span>AI</span></div>
+    <div class="card-sub">Live Sales Call Objection Handler · Miner · Belfort · Hormozi · Cardone · Robbins</div>
+    <div class="progress-dots"><div class="pdot active"></div><div class="pdot"></div><div class="pdot"></div></div>
 
-    <div class="setup-divider"></div>
+    <div class="divider"></div>
+    <div class="card-label">Step 1 — Get your free Anthropic API key</div>
+    <div class="step-row"><div class="step-num">1</div><div class="step-text">Go to <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → create a free account</div></div>
+    <div class="step-row"><div class="step-num">2</div><div class="step-text">Click <strong style="color:var(--text)">API Keys</strong> → <strong style="color:var(--text)">Create Key</strong> → copy it</div></div>
+    <div class="step-row"><div class="step-num">3</div><div class="step-text">New accounts get <strong style="color:var(--green)">$5 free credits</strong> — ~250 objections handled for free</div></div>
+    <div class="divider"></div>
 
-    <div class="setup-label">How to get your free API key</div>
-    <div class="step-row"><div class="step-num">1</div><div class="step-text">Go to <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> and create a free account</div></div>
-    <div class="step-row"><div class="step-num">2</div><div class="step-text">Click <strong style="color:var(--text)">API Keys</strong> in the left sidebar → <strong style="color:var(--text)">Create Key</strong></div></div>
-    <div class="step-row"><div class="step-num">3</div><div class="step-text">Copy it and paste it below. New accounts get <strong style="color:var(--green)">$5 free credits</strong> — that's ~250 objections handled at no cost.</div></div>
-
-    <div class="setup-divider"></div>
-
-    <div class="setup-label">Enter your Anthropic API key</div>
-    <div class="setup-input-row">
-      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off">
-      <button class="setup-btn" onclick="activateApp()">Launch →</button>
+    <div class="card-label">Paste your API key</div>
+    <div class="inp-row">
+      <input type="password" class="inp" id="apiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off">
+      <button class="btn" style="width:auto;margin-top:0;padding:10px 18px" onclick="goToIntake()">Next →</button>
     </div>
-    <div class="setup-error" id="setupError">Invalid key — make sure it starts with sk-ant-</div>
-    <div class="setup-note">Your key stays in your browser only. Never sent anywhere except directly to Anthropic's API.</div>
+    <div class="err" id="keyErr">Invalid key — must start with sk-ant-</div>
+    <div class="note">Your key never leaves your browser. It goes directly to Anthropic's API only.</div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 2: INTAKE ══ -->
+<div class="screen hidden" id="s2">
+  <div class="card" style="max-width:520px">
+    <div class="card-logo">CLOSER<span>AI</span></div>
+    <div class="card-sub">Train your agent for your industry — takes 60 seconds</div>
+    <div class="progress-dots"><div class="pdot"></div><div class="pdot active"></div><div class="pdot"></div></div>
+
+    <div class="card-label">What industry are you in?</div>
+    <input type="text" class="inp" id="industry" placeholder="e.g. Construction, Coaching, Real Estate, HVAC, Marketing Agency...">
+
+    <div class="card-label">What do you sell and what's the price?</div>
+    <input type="text" class="inp" id="offer" placeholder="e.g. Kitchen remodels starting at $25k / Marketing retainer $2,500/mo">
+
+    <div class="card-label">Who is your ideal client?</div>
+    <input type="text" class="inp" id="icp" placeholder="e.g. Homeowners in San Diego / Small business owners doing $500k+/year">
+
+    <div class="card-label">What's the #1 result you deliver?</div>
+    <input type="text" class="inp" id="result" placeholder="e.g. Full kitchen done in 6 weeks / 30+ booked appointments per month">
+
+    <div class="card-label">Top objections you hear most (optional)</div>
+    <textarea class="inp" id="objections" placeholder="e.g. Too expensive, need to think about it, already have a contractor..."></textarea>
+
+    <button class="btn" onclick="launchApp()">Launch My Agent →</button>
+    <button class="btn-ghost" onclick="launchApp()">Skip — use generic mode</button>
+    <div class="err" id="intakeErr">Please fill in at least your industry and what you sell.</div>
   </div>
 </div>
 
 <!-- ══ APP ══ -->
-<div id="appShell" style="display:none">
-
-  <!-- TOP BAR -->
+<div id="appShell">
   <div class="topbar">
     <div class="logo">CLOSER<span>AI</span></div>
-    <div class="topbar-divider"></div>
+    <div class="tb-divider"></div>
     <div class="call-status">
       <div class="call-dot" id="callDot"></div>
-      <span id="callStatusText">Standby</span>
+      <span id="callStatus">Standby</span>
     </div>
-    <div class="topbar-right">
-      <div class="timer" id="timerDisplay">00:00</div>
+    <div class="tb-right">
+      <div class="timer" id="timer">00:00</div>
       <button class="mic-btn" id="micBtn" onclick="toggleMic()">
-        <span>🎙</span>
-        <span id="micLabel">Start Listening</span>
+        <span>🎙</span><span id="micLabel">Start Listening</span>
       </button>
-      <button class="key-btn" onclick="resetKey()" title="Change API key">🔑 Key</button>
+      <button class="icon-btn" onclick="resetAll()" title="Settings">⚙ Retrain</button>
+      <button class="icon-btn" onclick="resetKey()" title="Change key">🔑</button>
     </div>
   </div>
 
-  <!-- LAYOUT -->
   <div class="layout">
-
     <!-- LEFT -->
     <div class="left-panel">
-      <div class="panel-header">
+      <div class="panel-hdr">
         <span>Live Transcript</span>
         <span id="lineCount">0 lines</span>
       </div>
-
       <div class="transcript-feed" id="transcriptFeed">
-        <div style="padding:20px 8px;text-align:center;color:var(--muted);font-size:12px;line-height:1.8;">
-          Mic transcript appears here.<br>Or type an objection below.
+        <div style="padding:18px 8px;text-align:center;color:var(--muted);font-size:12px;line-height:1.8;">
+          Mic transcript appears here.<br>Or use the buttons below.
         </div>
       </div>
-
       <div id="liveBar" class="live-bar">
-        <span style="font-size:10px">●</span>
-        <span class="live-preview" id="livePreview">Listening...</span>
+        <span style="font-size:9px">●</span>
+        <span class="live-prev" id="livePrev">Listening...</span>
       </div>
 
       <!-- QUICK FIRE -->
-      <div class="quick-section">
-        <div class="quick-label">Quick fire objections</div>
-        <div class="quick-list">
-          <button class="qb" onclick="fireQuick('It\'s too expensive')">Too expensive</button>
-          <button class="qb" onclick="fireQuick('I need to think about it')">Need to think</button>
-          <button class="qb" onclick="fireQuick('I already have someone doing this for me')">Have someone</button>
-          <button class="qb" onclick="fireQuick('I\'m not sure this will work for my business')">Won't work</button>
-          <button class="qb" onclick="fireQuick('Send me more information first')">Send info</button>
-          <button class="qb" onclick="fireQuick('I need to talk to my business partner first')">Talk to partner</button>
-          <button class="qb" onclick="fireQuick('We tried ads before and they didn\'t work')">Ads failed</button>
-          <button class="qb" onclick="fireQuick('I\'m too busy right now')">Too busy</button>
-          <button class="qb" onclick="fireQuick('I can\'t afford it right now')">Can't afford</button>
-          <button class="qb" onclick="fireQuick('How do I know this will actually work?')">Prove it</button>
+      <div class="qsection">
+        <div class="qlabel">Quick fire</div>
+        <div class="qlist" id="quickList">
+          <!-- populated dynamically based on industry -->
         </div>
       </div>
 
       <!-- MANUAL -->
       <div class="manual-area">
-        <div class="manual-label">Type the objection</div>
-        <div class="manual-row">
+        <div class="mlabel">Type the objection</div>
+        <div class="mrow">
           <input type="text" id="manualInput" placeholder="What they just said..." onkeydown="if(event.key==='Enter')sendManual()">
-          <button class="send-btn" onclick="sendManual()">Handle →</button>
+          <button class="sbtn" onclick="sendManual()">Handle →</button>
         </div>
       </div>
     </div>
 
     <!-- RIGHT -->
     <div class="right-panel">
-      <div class="right-header">
-        <span>Response Engine</span>
-        <div class="fw-badges">
-          <span class="fw-badge fw-miner">Miner</span>
-          <span class="fw-badge fw-belfort">Belfort</span>
-          <span class="fw-badge fw-hormozi">Hormozi</span>
+      <div class="right-hdr">
+        <span id="agentLabel">Response Engine</span>
+        <div class="fw-row">
+          <span class="fw fw-m">Miner</span>
+          <span class="fw fw-b">Belfort</span>
+          <span class="fw fw-h">Hormozi</span>
+          <span class="fw fw-c">Cardone</span>
+          <span class="fw fw-t">Robbins</span>
         </div>
       </div>
       <div class="response-feed" id="responseFeed">
         <div class="welcome" id="welcomeMsg">
           <div class="welcome-icon">⚡</div>
-          <div class="welcome-title">Ready on the line</div>
-          <div class="welcome-sub">Hit an objection? Type it, tap a quick button, or go live with the mic.</div>
+          <div class="welcome-title" id="welcomeTitle">Agent Ready</div>
+          <div class="welcome-sub" id="welcomeSub">Hit an objection? Type it, tap a quick button, or go live with the mic.</div>
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
 <script>
 // ── STATE ──
 let API_KEY = '';
-let objectionCount = 0;
+let PROFILE = {};
 let isListening = false;
 let recognition = null;
 let timerInterval = null;
@@ -368,79 +381,180 @@ let lineCount = 0;
 let isProcessing = false;
 let silenceTimer = null;
 
-const SYSTEM_PROMPT = `You are an elite real-time sales objection handler. You combine three frameworks:
+// ── DEFAULT QUICK OBJECTIONS ──
+const DEFAULT_QUICK = [
+  "It's too expensive",
+  "I need to think about it",
+  "I already have someone",
+  "I'm not sure it'll work",
+  "Send me more info first",
+  "I need to talk to my partner",
+  "We tried this before and it didn't work",
+  "I'm too busy right now",
+  "I can't afford it right now",
+  "How do I know this will work?"
+];
 
-JEREMY MINER (NEPQ):
-- Use curiosity, never defensiveness. Questions are your weapon.
-- Uncover the REAL problem behind the surface objection.
-- Status quo questions: "What's happened as a result of that?" / "How long has that been going on?"
-- Consequence questions: "If nothing changes in the next 6–12 months, what does that cost you?"
-- Never push — pull. Make them feel deeply understood, then redirect.
-
-JORDAN BELFORT (Straight Line):
-- Every objection = buying signal needing more certainty.
-- Address the 3 Tens: certainty about product, certainty about you, certainty about company.
-- Use looping: acknowledge → soften → pivot back to the vision.
-- Tonality: low and slow for price. Enthusiastic when painting the outcome.
-- Build certainty through specificity — numbers, proof, facts.
-
-ALEX HORMOZI ($100M Offers):
-- Stack value BEFORE addressing price. Never defend price directly.
-- Reframe: "The price is what you pay. The cost is what you LOSE by not acting."
-- Kill stalls: "What specifically do you need to think about? Let's think about it together right now."
-- "Would it be fair to say..." closes.
-- Speed and certainty as value — delay = cost.
-
-YOUR JOB:
-Respond to the objection with ONLY valid JSON. No markdown. No text outside the JSON.
-
-JSON format:
-{
-  "objection_type": "price|trust|timing|value|competition|stall",
-  "frameworks_used": ["miner","belfort","hormozi"],
-  "bullets": ["key move 1","key move 2","key move 3"],
-  "full_script": "Word-for-word script with [stage directions] in brackets. 150-220 words. Natural, human, NOT robotic.",
-  "script_note": "One short tonal coaching note"
-}
-
-Rules:
-- Works for ANY industry. Never assume the business type.
-- Script must sound like a real human having a conversation.
-- Use questions as weapons (Miner). Build certainty (Belfort). Reframe value (Hormozi).
-- Stage directions like [pause] [slow down] [drop your voice] make the script usable live.`;
-
-// ── SETUP ──
-function activateApp() {
+// ── SCREEN 1 → SCREEN 2 ──
+function goToIntake() {
   const key = document.getElementById('apiKeyInput').value.trim();
-  const err = document.getElementById('setupError');
-  if (!key.startsWith('sk-ant-')) {
-    err.style.display = 'block';
-    return;
-  }
-  err.style.display = 'none';
+  const err = document.getElementById('keyErr');
+  if (!key.startsWith('sk-ant-')) { err.style.display='block'; return; }
+  err.style.display='none';
   API_KEY = key;
   sessionStorage.setItem('closer_key', key);
-  document.getElementById('setupScreen').style.display = 'none';
-  document.getElementById('appShell').style.display = 'block';
+  document.getElementById('s1').classList.add('hidden');
+  document.getElementById('s2').classList.remove('hidden');
 }
 
-function resetKey() {
-  sessionStorage.removeItem('closer_key');
-  API_KEY = '';
-  document.getElementById('apiKeyInput').value = '';
-  document.getElementById('setupScreen').style.display = 'flex';
-  document.getElementById('appShell').style.display = 'none';
-}
+// ── SCREEN 2 → APP ──
+async function launchApp() {
+  const industry = document.getElementById('industry').value.trim();
+  const offer = document.getElementById('offer').value.trim();
+  const icp = document.getElementById('icp').value.trim();
+  const result = document.getElementById('result').value.trim();
+  const objections = document.getElementById('objections').value.trim();
 
-// Auto-load key from session
-window.addEventListener('load', () => {
-  const saved = sessionStorage.getItem('closer_key');
-  if (saved && saved.startsWith('sk-ant-')) {
-    API_KEY = saved;
-    document.getElementById('setupScreen').style.display = 'none';
-    document.getElementById('appShell').style.display = 'block';
+  PROFILE = { industry, offer, icp, result, objections };
+  sessionStorage.setItem('closer_profile', JSON.stringify(PROFILE));
+
+  document.getElementById('s2').classList.add('hidden');
+  document.getElementById('appShell').style.display = 'flex';
+  document.getElementById('appShell').style.flexDirection = 'column';
+  document.getElementById('appShell').style.height = '100vh';
+
+  // Update UI with industry context
+  if (industry) {
+    document.getElementById('agentLabel').textContent = `${industry} Agent`;
+    document.getElementById('welcomeTitle').textContent = `${industry} Agent Ready`;
+    document.getElementById('welcomeSub').textContent = `Trained for your industry. Hit an objection to get your kill shot.`;
   }
-});
+
+  // Generate industry-specific quick fire objections
+  await generateQuickObjestions(industry, offer);
+}
+
+// ── GENERATE SMART QUICK OBJECTIONS ──
+async function generateQuickObjestions(industry, offer) {
+  const list = document.getElementById('quickList');
+
+  if (!industry && !offer) {
+    renderQuickBtns(DEFAULT_QUICK);
+    return;
+  }
+
+  // Use AI to generate industry-specific objections
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 400,
+        messages: [{
+          role: 'user',
+          content: `Generate exactly 10 of the most common sales objections for someone selling: "${offer || industry}". Industry: ${industry}. Return ONLY a JSON array of 10 short objection strings (max 8 words each), exactly as a prospect would say them. No other text.`
+        }]
+      })
+    });
+    const data = await res.json();
+    const raw = data.content?.[0]?.text || '';
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const arr = JSON.parse(clean);
+    if (Array.isArray(arr) && arr.length > 0) {
+      renderQuickBtns(arr);
+      return;
+    }
+  } catch(e) {}
+
+  renderQuickBtns(DEFAULT_QUICK);
+}
+
+function renderQuickBtns(arr) {
+  const list = document.getElementById('quickList');
+  list.innerHTML = '';
+  arr.forEach(obj => {
+    const btn = document.createElement('button');
+    btn.className = 'qbtn';
+    btn.textContent = obj.length > 30 ? obj.substring(0,30)+'...' : obj;
+    btn.title = obj;
+    btn.onclick = () => fireQuick(obj);
+    list.appendChild(btn);
+  });
+}
+
+// ── BUILD SYSTEM PROMPT ──
+function buildSystemPrompt() {
+  const p = PROFILE;
+  const industryContext = p.industry ? `
+INDUSTRY CONTEXT (very important — tailor every response to this):
+- Industry: ${p.industry}
+- What they sell: ${p.offer || 'not specified'}
+- Ideal client: ${p.icp || 'not specified'}
+- Key result delivered: ${p.result || 'not specified'}
+- Common objections in their world: ${p.objections || 'not specified'}
+
+Every script MUST reference this context. Use industry-specific language, examples, and outcomes.` : '';
+
+  return `You are an elite real-time sales objection handler used LIVE on sales calls. Your responses must be:
+- Easy to READ at a glance while on a phone call
+- Natural sounding, like a real human talking — NOT a script robot
+- Concise but powerful — no fluff, no padding
+${industryContext}
+
+You are trained on these five frameworks:
+
+JEREMY MINER (NEPQ):
+- Questions are your weapon — never push, always pull
+- Uncover the REAL problem behind the objection
+- "What's happened as a result of that?" / "How long has that been going on?"
+- "If nothing changes in the next 6-12 months, what does that cost you?"
+- Make them feel deeply understood first, then redirect
+
+JORDAN BELFORT (Straight Line):
+- Every objection = buying signal needing more certainty
+- Address certainty about the product, you, and the company
+- Acknowledge → soften → loop back to the vision
+- Low and slow tonality for price. Enthusiastic for the outcome.
+- Specificity builds certainty — use numbers and proof
+
+ALEX HORMOZI ($100M Offers):
+- Stack value BEFORE addressing price — never defend price directly
+- "The price is what you pay. The cost is what you LOSE by not acting."
+- Kill stalls: "What specifically do you need to think about? Let's think about it together."
+- "Would it be fair to say..." closes
+- Delay = cost — make that real
+
+GRANT CARDONE (10X / Sell or Be Sold):
+- Every prospect CAN afford it — it's a priority problem, not a money problem
+- Follow up is everything — "The fortune is in the follow up"
+- Never accept no — "No just means not yet, I haven't given you enough reason"
+- Be more committed to the sale than they are to their objection
+- "You can't afford NOT to do this"
+
+TONY ROBBINS (State & Rapport):
+- Match and mirror their energy before redirecting
+- Change their state — shift the emotion, shift the decision
+- Human needs: certainty, significance, connection, growth — find which one is blocking them
+- Use pattern interrupts to break the objection loop
+- People buy on emotion, justify with logic — speak to both
+
+YOUR RESPONSE FORMAT:
+Return ONLY valid JSON. No markdown. No extra text.
+
+{
+  "objection_type": "price|trust|timing|value|competition|stall",
+  "script": "The word-for-word script they say on the call. 3-5 sentences max per block. Use [PAUSE] [SLOW DOWN] [DROP VOICE] [LEAN IN] as inline stage directions between sentences. Make it flow like a real conversation.",
+  "tone": "One sentence on HOW to deliver it — pace, energy, body language"
+}
+
+RULES:
+- Script must be READABLE at a glance on a phone call. Short sentences. Clear words.
+- Stage directions go BETWEEN sentences, not at the start
+- No bullet lists in the script — it's a conversation, not a presentation
+- Tone note goes UNDER the script in small text
+- Adapt language and examples to the industry context above`;
+}
 
 // ── TIMER ──
 function startTimer() {
@@ -448,19 +562,15 @@ function startTimer() {
     timerSeconds++;
     const m = String(Math.floor(timerSeconds/60)).padStart(2,'0');
     const s = String(timerSeconds%60).padStart(2,'0');
-    document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+    document.getElementById('timer').textContent = `${m}:${s}`;
   }, 1000);
-  document.getElementById('timerDisplay').classList.add('active');
+  document.getElementById('timer').classList.add('active');
 }
-function stopTimer() {
-  clearInterval(timerInterval);
-  document.getElementById('timerDisplay').classList.remove('active');
-}
+function stopTimer() { clearInterval(timerInterval); document.getElementById('timer').classList.remove('active'); }
 
 // ── MIC ──
-function toggleMic() {
-  isListening ? stopMic() : startMic();
-}
+function toggleMic() { isListening ? stopMic() : startMic(); }
+
 function startMic() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) { alert('Use Chrome or Edge for mic support.'); return; }
@@ -473,69 +583,66 @@ function startMic() {
     document.getElementById('micBtn').classList.add('listening');
     document.getElementById('micLabel').textContent = 'Listening...';
     document.getElementById('callDot').classList.add('active');
-    document.getElementById('callStatusText').textContent = 'On call';
-    document.getElementById('liveBar').classList.add('visible');
+    document.getElementById('callStatus').textContent = 'On call';
+    document.getElementById('liveBar').classList.add('on');
     startTimer();
   };
   recognition.onresult = (e) => {
-    let interim = '', final = '';
-    for (let i = e.resultIndex; i < e.results.length; i++) {
+    let interim='', final='';
+    for (let i=e.resultIndex; i<e.results.length; i++) {
       const t = e.results[i][0].transcript;
-      e.results[i].isFinal ? final += t : interim += t;
+      e.results[i].isFinal ? final+=t : interim+=t;
     }
-    if (interim) document.getElementById('livePreview').textContent = interim;
+    if (interim) document.getElementById('livePrev').textContent = interim;
     if (final.trim()) {
-      document.getElementById('livePreview').textContent = 'Listening...';
+      document.getElementById('livePrev').textContent = 'Listening...';
       addLine(final.trim(), 'them');
       clearTimeout(silenceTimer);
-      silenceTimer = setTimeout(() => {
-        if (isObjection(final.trim())) processObjection(final.trim());
-      }, 700);
+      silenceTimer = setTimeout(() => { if (isObjection(final.trim())) processObjection(final.trim()); }, 700);
     }
   };
   recognition.onerror = (e) => { if (e.error !== 'no-speech') console.error(e.error); };
   recognition.onend = () => { if (isListening) recognition.start(); };
   recognition.start();
 }
+
 function stopMic() {
   isListening = false;
   if (recognition) recognition.stop();
   document.getElementById('micBtn').classList.remove('listening');
   document.getElementById('micLabel').textContent = 'Start Listening';
   document.getElementById('callDot').classList.remove('active');
-  document.getElementById('callStatusText').textContent = 'Standby';
-  document.getElementById('liveBar').classList.remove('visible');
+  document.getElementById('callStatus').textContent = 'Standby';
+  document.getElementById('liveBar').classList.remove('on');
   stopTimer();
 }
 
 // ── OBJECTION DETECTION ──
 function isObjection(text) {
   const t = text.toLowerCase();
-  return ['too expensive','can\'t afford','not in budget','budget','think about it','think it over',
-    'need to think','not sure','not ready','already have','someone else','using someone',
-    'not interested','don\'t need','not right now','maybe later','call me back','busy right now',
-    'not the right time','need to talk to','my partner','my boss','tried before','didn\'t work',
+  return ['too expensive','can\'t afford','not in budget','think about it','think it over','need to think',
+    'not sure','not ready','already have','someone else','not interested','not right now','maybe later',
+    'call me back','busy right now','need to talk','my partner','my boss','tried before','didn\'t work',
     'doesn\'t work','waste of money','send information','send me info','need more info',
-    'how do i know','prove it','show me','guarantee'].some(k => t.includes(k));
+    'how do i know','prove it','show me','guarantee','not the right time'].some(k => t.includes(k));
 }
 
 // ── TRANSCRIPT ──
 function addLine(text, speaker) {
   const feed = document.getElementById('transcriptFeed');
-  const placeholder = feed.querySelector('div[style]');
-  if (placeholder) placeholder.remove();
+  const ph = feed.querySelector('div[style]');
+  if (ph) ph.remove();
   lineCount++;
   document.getElementById('lineCount').textContent = lineCount + ' lines';
   const isObj = isObjection(text) && speaker === 'them';
   const div = document.createElement('div');
-  div.className = `transcript-line ${speaker}${isObj ? ' flagged' : ''}`;
-  div.innerHTML = `<div class="spk">${speaker === 'them' ? 'Prospect' : 'You'}</div>${text}`;
-  if (speaker === 'them') { div.onclick = () => processObjection(text); div.title = 'Click to handle'; }
+  div.className = `tline ${speaker}${isObj?' flagged':''}`;
+  div.innerHTML = `<div class="spk">${speaker==='them'?'Prospect':'You'}</div>${text}`;
+  if (speaker==='them') { div.onclick = () => processObjection(text); div.title='Click to handle'; }
   feed.appendChild(div);
   feed.scrollTop = feed.scrollHeight;
 }
 
-// ── MANUAL / QUICK ──
 function sendManual() {
   const el = document.getElementById('manualInput');
   const text = el.value.trim();
@@ -544,59 +651,50 @@ function sendManual() {
   addLine(text, 'them');
   processObjection(text);
 }
+
 function fireQuick(text) {
   addLine(text, 'them');
   processObjection(text);
 }
 
-// ── PROCESS ──
+// ── PROCESS OBJECTION ──
 async function processObjection(text) {
   if (isProcessing) return;
   isProcessing = true;
-  objectionCount++;
-  const isFirst = objectionCount === 1;
 
   const feed = document.getElementById('responseFeed');
   const welcome = document.getElementById('welcomeMsg');
   if (welcome) welcome.remove();
 
   const loader = document.createElement('div');
-  loader.className = 'loading-card';
-  loader.innerHTML = `<div class="ldots"><div class="ldot"></div><div class="ldot"></div><div class="ldot"></div></div><div class="ltext">Building your kill shot...</div>`;
+  loader.className = 'loader';
+  loader.innerHTML = `<div class="ldots"><div class="ldot"></div><div class="ldot"></div><div class="ldot"></div></div><div class="ltext">Getting your response...</div>`;
   feed.appendChild(loader);
   feed.scrollTop = feed.scrollHeight;
 
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        system: SYSTEM_PROMPT,
+        max_tokens: 800,
+        system: buildSystemPrompt(),
         messages: [{ role: 'user', content: `Prospect just said: "${text}"` }]
       })
     });
     const data = await res.json();
     loader.remove();
 
-    if (data.error) {
-      showErr(feed, `API Error: ${data.error.message}`);
-      isProcessing = false;
-      return;
-    }
+    if (data.error) { showErr(feed, `API Error: ${data.error.message}`); isProcessing=false; return; }
 
     const raw = data.content?.[0]?.text || '';
     let parsed;
     try { parsed = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
-    catch { showErr(feed, 'Could not parse response. Try again.'); isProcessing = false; return; }
+    catch { showErr(feed, 'Parse error — try again.'); isProcessing=false; return; }
 
-    renderCard(feed, text, parsed, isFirst);
-    addLine('→ Response generated', 'me');
+    renderCard(feed, text, parsed);
+    addLine('→ Response ready', 'me');
   } catch(e) {
     loader.remove();
     showErr(feed, 'Network error. Check your connection.');
@@ -613,39 +711,24 @@ function showErr(feed, msg) {
 }
 
 // ── RENDER CARD ──
-function renderCard(feed, objText, data, isFirst) {
+function renderCard(feed, objText, data) {
   const tagClass = ['price','trust','timing','value','competition','stall'].includes(data.objection_type) ? data.objection_type : 'stall';
-  const fwHtml = (data.frameworks_used||[]).map(f => {
-    const cls = f==='miner'?'fw-miner':f==='belfort'?'fw-belfort':'fw-hormozi';
-    const lbl = f==='miner'?'Miner / NEPQ':f==='belfort'?'Belfort / Straight Line':'Hormozi / Value Stack';
-    return `<span class="fw-badge ${cls}">${lbl}</span>`;
-  }).join('');
 
-  const sid = 's'+Date.now();
-  const tid = 't'+Date.now();
-  const scriptHtml = formatScript(data.full_script||'');
-
-  let bulletsHtml = '';
-  let coachHtml = '';
-  if (isFirst) {
-    bulletsHtml = `<div class="bullets-section"><div class="bullets-title">Key moves</div><ul class="bullet-list">${(data.bullets||[]).map(b=>`<li>${b}</li>`).join('')}</ul></div>`;
-    coachHtml = data.script_note ? `<div class="coach-note"><strong>Coach:</strong> ${data.script_note}</div>` : '';
-  }
+  // Format script — split on [DIRECTION] tags
+  const scriptHtml = formatScript(data.script || '');
 
   const card = document.createElement('div');
-  card.className = 'response-card';
+  card.className = 'rcard';
   card.innerHTML = `
-    <div class="card-top">
-      <div><div class="obj-label">Objection detected</div><div class="obj-text">"${objText}"</div></div>
-      <span class="obj-tag ${tagClass}">${data.objection_type||'stall'}</span>
+    <div class="rcard-top">
+      <div>
+        <div class="rcard-obj-lbl">Objection</div>
+        <div class="rcard-obj-text">"${objText}"</div>
+      </div>
+      <span class="otag ${tagClass}">${data.objection_type||'stall'}</span>
     </div>
-    <div class="card-frameworks">${fwHtml}</div>
-    ${bulletsHtml}
-    ${coachHtml}
-    <div class="script-toggle" id="${tid}" onclick="toggleScript('${sid}','${tid}')">
-      <span>Full script — word for word</span><span class="chevron">▾</span>
-    </div>
-    <div class="full-script" id="${sid}">${scriptHtml}</div>
+    <div class="rcard-script">${scriptHtml}</div>
+    ${data.tone ? `<div class="rcard-tone"><strong>Tone:</strong> ${data.tone}</div>` : ''}
   `;
   feed.appendChild(card);
   feed.scrollTop = feed.scrollHeight;
@@ -653,22 +736,59 @@ function renderCard(feed, objText, data, isFirst) {
 
 function formatScript(script) {
   if (!script) return '';
-  const parts = script.split(/(\[.*?\])/g);
-  let html = '', buf = '';
+  const parts = script.split(/(\[[A-Z\s]+\])/g);
+  let html = '';
   parts.forEach(p => {
-    if (p.startsWith('[') && p.endsWith(']')) {
-      if (buf.trim()) { html += `<div class="script-line">${buf.trim()}</div>`; buf = ''; }
-      html += `<div class="script-dir">${p}</div>`;
-    } else { buf += ' ' + p; }
+    p = p.trim();
+    if (!p) return;
+    if (/^\[[A-Z\s]+\]$/.test(p)) {
+      html += `<span class="script-dir">${p.replace(/[\[\]]/g,'')}</span> `;
+    } else {
+      html += `<span class="script-block">${p} </span>`;
+    }
   });
-  if (buf.trim()) html += `<div class="script-line">${buf.trim()}</div>`;
   return html;
 }
 
-function toggleScript(sid, tid) {
-  document.getElementById(sid).classList.toggle('open');
-  document.getElementById(tid).classList.toggle('open');
+// ── RESET ──
+function resetAll() {
+  sessionStorage.removeItem('closer_profile');
+  document.getElementById('appShell').style.display = 'none';
+  document.getElementById('s2').classList.remove('hidden');
+  document.getElementById('s1').classList.add('hidden');
 }
+function resetKey() {
+  sessionStorage.clear();
+  API_KEY = '';
+  document.getElementById('appShell').style.display = 'none';
+  document.getElementById('s1').classList.remove('hidden');
+  document.getElementById('s2').classList.add('hidden');
+}
+
+// ── AUTO-LOAD FROM SESSION ──
+window.addEventListener('load', () => {
+  const key = sessionStorage.getItem('closer_key');
+  const profile = sessionStorage.getItem('closer_profile');
+  if (key && key.startsWith('sk-ant-')) {
+    API_KEY = key;
+    if (profile) {
+      PROFILE = JSON.parse(profile);
+      document.getElementById('s1').classList.add('hidden');
+      document.getElementById('s2').classList.add('hidden');
+      document.getElementById('appShell').style.display = 'flex';
+      document.getElementById('appShell').style.flexDirection = 'column';
+      document.getElementById('appShell').style.height = '100vh';
+      if (PROFILE.industry) {
+        document.getElementById('agentLabel').textContent = `${PROFILE.industry} Agent`;
+        document.getElementById('welcomeTitle').textContent = `${PROFILE.industry} Agent Ready`;
+      }
+      generateQuickObjestions(PROFILE.industry, PROFILE.offer);
+    } else {
+      document.getElementById('s1').classList.add('hidden');
+      document.getElementById('s2').classList.remove('hidden');
+    }
+  }
+});
 </script>
 </body>
 </html>
